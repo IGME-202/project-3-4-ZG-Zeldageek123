@@ -111,3 +111,9 @@ MonoBehaviour:
   maxSpeed: 0
   maxForce: 0
   targetHuman: {fileID: 0}
+  zombie: {fileID: 0}
+  red: {fileID: 0}
+  green: {fileID: 0}
+  blue: {fileID: 0}
+  black: {fileID: 0}
+  lines: 0

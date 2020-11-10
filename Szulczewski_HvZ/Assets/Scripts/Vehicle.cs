@@ -47,6 +47,8 @@ public abstract class Vehicle : MonoBehaviour
 
         //Get the direction vector normalized (not a crazy magnitude)
         direction = velocity.normalized;
+        //change the direction of the gameobj
+        transform.rotation = Quaternion.LookRotation(Vector3.down, direction);
 
         //Acceleration must start fresh
         acceleration = Vector3.zero;
