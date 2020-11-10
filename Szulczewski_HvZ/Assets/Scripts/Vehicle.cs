@@ -6,8 +6,8 @@ public abstract class Vehicle : MonoBehaviour
 {
     protected Vector3 position;
     protected Vector3 direction;
-    protected Vector3 velocity;
-    protected Vector3 acceleration;
+    public Vector3 velocity;
+    public Vector3 acceleration;
 
     [Min (0.0001f)]
     public float mass;
@@ -40,7 +40,7 @@ public abstract class Vehicle : MonoBehaviour
         position += velocity * Time.deltaTime;
 
         //Wrap the vehicle if need be
-        WrapVehicle();
+        BoundVehicle();
 
         //Update the position in game
         transform.position = position;
@@ -59,7 +59,7 @@ public abstract class Vehicle : MonoBehaviour
         acceleration += force / mass;
     }
 
-    void WrapVehicle()
+    void BoundVehicle()
     {
         Camera main = Camera.main;
         float totalCamHeight = 2f * main.orthographicSize;
@@ -87,6 +87,25 @@ public abstract class Vehicle : MonoBehaviour
             position = new Vector3(position.x, 0f, 2);
             velocity.z = -velocity.z;
         }
+
+        /*
+        if (position.x + (velocity * Time.deltaTime).x < ((0)))
+        {
+            Flee(new Vector3(position.x + (velocity * Time.deltaTime).x, position.y, position.z));
+        }
+        if (position.x + (velocity * Time.deltaTime).x > (100))
+        {
+            Flee(new Vector3(position.x + (velocity * Time.deltaTime).x, position.y, position.z));
+        }
+        if (position.z + (velocity * Time.deltaTime).z < ((0)))
+        {
+            Flee(new Vector3(position.x, position.y, position.z + (velocity * Time.deltaTime).z));
+        }
+        if (position.z + (velocity * Time.deltaTime).z > (100))
+        {
+            Flee(new Vector3(position.x, position.y, position.z + (velocity * Time.deltaTime).z));
+        }
+        */
     }
 
     protected abstract void CalcSteeringForces();

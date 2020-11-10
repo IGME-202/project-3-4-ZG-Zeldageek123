@@ -25,9 +25,9 @@ public class Zombie : Vehicle
     protected override void Start()
     {
         base.Start();
-        //Heavier than the human
-        mass = .5f;
-        maxSpeed = 4.5f;
+        //Heavier than the human originally, but less heavy for debugging / presentation purposes
+        mass = 1.5f;
+        maxSpeed = 3f;
 
         //At start, debug lines should be on
         lines = Debug.On;
@@ -45,7 +45,18 @@ public class Zombie : Vehicle
     protected override void CalcSteeringForces()
     {
         //apply the force of seeking toward the human!
-        ApplyForce(Seek(targetHuman));
+
+        //But only if the target human is ACTIVE
+        if (targetHuman.activeSelf == true)
+        {
+            ApplyForce(Seek(targetHuman));
+        }
+        else
+        {
+            //Stop the zombie if its target is not active
+            velocity = Vector3.zero;
+            acceleration = Vector3.zero;
+        }
     }
 
     protected override void Update()

@@ -75,7 +75,7 @@ public class Manager : MonoBehaviour
 
                         //Kill the human and make a new zomb
                         humans.Remove(zom.GetComponent<Zombie>().targetHuman);
-                        Destroy(zom.GetComponent<Zombie>().targetHuman);
+                        zom.GetComponent<Zombie>().targetHuman.SetActive(false);
 
                         //make new zom
                         zombies.Add(Instantiate(zombie, zomPos, Quaternion.identity));
