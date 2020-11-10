@@ -8,6 +8,14 @@ public class Manager : MonoBehaviour
     public List<GameObject> zombies;
     public List<GameObject> humans;
 
+    public enum Debug
+    {
+        On,
+        Off
+    }
+
+    public Debug lines;
+
     //starting zombies and humans
     [SerializeField]
     GameObject zom1;
@@ -49,13 +57,14 @@ public class Manager : MonoBehaviour
         zombies.Add(zom1);
         zombies.Add(zom2);
         zombies.Add(zom3);
+
+        lines = Debug.On;
     }
 
     // Update is called once per frame
     void Update()
     {
         //Check for collision between every zombie and every human
-
         if (humans.Count > 0)
         {
         foreach(GameObject zom in zombies)
@@ -81,6 +90,19 @@ public class Manager : MonoBehaviour
                         zombies.Add(Instantiate(zombie, zomPos, Quaternion.identity));
                     }
                 }
+            }
+        }
+        //Check to toggle debug lines
+        //If the user presses d, toggle the debug lines
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (lines == Debug.On)
+            {
+                lines = Debug.Off;
+            }
+            else
+            {
+                lines = Debug.On;
             }
         }
     }

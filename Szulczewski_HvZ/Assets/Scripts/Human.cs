@@ -10,6 +10,7 @@ public class Human : Vehicle
     [SerializeField]
     Manager manager;
 
+    /*
     //Debug lines
     enum Debug
     {
@@ -18,6 +19,7 @@ public class Human : Vehicle
     }
     [SerializeField]
     Debug lines;
+    */
 
     protected override void Start()
     {
@@ -27,7 +29,7 @@ public class Human : Vehicle
         detectionRange = 10f;
 
         //At start, debug lines should be on
-        lines = Debug.On;
+        //lines = Debug.On;
 
         manager = GameObject.Find("Manager").GetComponent<Manager>();
     }
@@ -69,6 +71,7 @@ public class Human : Vehicle
         //Always set y = 0.5
         position.y = .5f;
 
+        /*
         //If the user presses d, toggle the deug lines to off
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -80,13 +83,13 @@ public class Human : Vehicle
             {
                 lines = Debug.On;
             }
-        }
+        }*/
     }
 
     void OnRenderObject()
     {
         //Only run this if GUI is set to ON
-        if (lines == Debug.On)
+        if (manager.lines == 0)
         {
 
             // Set the material to be used for the first line

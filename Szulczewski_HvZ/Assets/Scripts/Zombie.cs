@@ -13,6 +13,7 @@ public class Zombie : Vehicle
     public Manager manager;
 
     //Debug lines
+    /*
     enum Debug
     {
         On,
@@ -21,16 +22,17 @@ public class Zombie : Vehicle
 
     [SerializeField]
     Debug lines;
+    */
 
     protected override void Start()
     {
         base.Start();
         //Heavier than the human originally, but less heavy for debugging / presentation purposes
-        mass = 1.5f;
-        maxSpeed = 3f;
+        mass = .9f;
+        maxSpeed = 4.2f;
 
         //At start, debug lines should be on
-        lines = Debug.On;
+        //lines = Debug.On;
 
         manager = GameObject.Find("Manager").GetComponent<Manager>();
         targetHuman = manager.humans[0];
@@ -97,6 +99,7 @@ public class Zombie : Vehicle
             position.y = 1.0003f;
         }
 
+        /*
         //If the user presses d, toggle the debug lines
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -108,7 +111,7 @@ public class Zombie : Vehicle
             {
                 lines = Debug.On;
             }
-        }
+        }*/
 
         /*
         //Collision detection with human - remove them and change them into a zombie
@@ -136,7 +139,7 @@ public class Zombie : Vehicle
     void OnRenderObject()
     {
         //Only run this if GUI is set to ON
-        if (lines == Debug.On)
+        if (manager.lines == 0)
         {
             // Set the material to be used for the first line
             //FORWARD VECTOR ------------------------------------------------------

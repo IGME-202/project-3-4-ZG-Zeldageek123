@@ -67,6 +67,7 @@ public abstract class Vehicle : MonoBehaviour
 
         // Check if not on viewport
         // Note - width / height must be divided by two because origin is centered.
+        /*
         if (position.x < ((0)))
         {
             position = new Vector3((98), 0f, position.z);
@@ -86,26 +87,25 @@ public abstract class Vehicle : MonoBehaviour
         {
             position = new Vector3(position.x, 0f, 2);
             velocity.z = -velocity.z;
-        }
+        }*/
 
-        /*
-        if (position.x + (velocity * Time.deltaTime).x < ((0)))
+        //While nearing the edge of the viewport, seek the center again so you never go out of bounds
+        if (position.x <= ((4)))
         {
-            Flee(new Vector3(position.x + (velocity * Time.deltaTime).x, position.y, position.z));
+            Seek(new Vector3(0, position.y, 0));
         }
-        if (position.x + (velocity * Time.deltaTime).x > (100))
+        if (position.x >= (96))
         {
-            Flee(new Vector3(position.x + (velocity * Time.deltaTime).x, position.y, position.z));
+            Seek(new Vector3(0, position.y, 0));
         }
-        if (position.z + (velocity * Time.deltaTime).z < ((0)))
+        if (position.z <= ((4)))
         {
-            Flee(new Vector3(position.x, position.y, position.z + (velocity * Time.deltaTime).z));
+            Seek(new Vector3(0, position.y, 0));
         }
-        if (position.z + (velocity * Time.deltaTime).z > (100))
+        if (position.z >= (96))
         {
-            Flee(new Vector3(position.x, position.y, position.z + (velocity * Time.deltaTime).z));
+            Seek(new Vector3(0, position.y, 0));
         }
-        */
     }
 
     protected abstract void CalcSteeringForces();
