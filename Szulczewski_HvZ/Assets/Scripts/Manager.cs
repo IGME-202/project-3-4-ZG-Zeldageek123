@@ -7,6 +7,9 @@ public class Manager : MonoBehaviour
     //create data structures for zombies and humans
     public List<GameObject> zombies;
     public List<GameObject> humans;
+    //And obstacles
+    [SerializeField]
+    public List<GameObject> obstacles;
 
     public enum Debug
     {
@@ -29,6 +32,26 @@ public class Manager : MonoBehaviour
     GameObject hum2;
     [SerializeField]
     GameObject hum3;
+
+    //Staring obstacles
+    [SerializeField]
+    GameObject obs1;
+    [SerializeField]
+    GameObject obs2;
+    [SerializeField]
+    GameObject obs3;
+    [SerializeField]
+    GameObject obs4;
+    [SerializeField]
+    GameObject obs5;
+    [SerializeField]
+    GameObject obs6;
+    [SerializeField]
+    GameObject obs7;
+    [SerializeField]
+    GameObject obs8;
+    [SerializeField]
+    GameObject obs9;
 
     //The zombie and human we will instantiate
     [SerializeField]
@@ -57,6 +80,17 @@ public class Manager : MonoBehaviour
         zombies.Add(zom1);
         zombies.Add(zom2);
         zombies.Add(zom3);
+
+        //Add obstacles to list
+        obstacles.Add(obs1);
+        obstacles.Add(obs2);
+        obstacles.Add(obs3);
+        obstacles.Add(obs4);
+        obstacles.Add(obs5);
+        obstacles.Add(obs6);
+        obstacles.Add(obs7);
+        obstacles.Add(obs8);
+        obstacles.Add(obs9);
 
         lines = Debug.On;
     }

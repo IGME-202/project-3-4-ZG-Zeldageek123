@@ -42,6 +42,8 @@ public class Zombie : Vehicle
         humans.Add(targetHuman2);
         humans.Add(targetHuman3);
         */
+
+        safeDistance = 8f;
     }
 
     protected override void CalcSteeringForces()
@@ -58,6 +60,12 @@ public class Zombie : Vehicle
             //Stop the zombie if its target is not active
             velocity = Vector3.zero;
             acceleration = Vector3.zero;
+        }
+
+        //Apply the forces to dodge the obstacles
+        foreach (GameObject obstacle in manager.obstacles)
+        {
+            ApplyForce(Avoidobstacle(obstacle));
         }
     }
 

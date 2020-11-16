@@ -54,6 +54,12 @@ public class Human : Vehicle
         //Clamp it to the magnitude of the max force
         uForce = Vector3.ClampMagnitude(uForce, maxForce);
 
+        //Apply the forces to dodge the obstacles
+        foreach(GameObject obstacle in manager.obstacles)
+        {
+            uForce += Avoidobstacle(obstacle);
+        }
+
         //Apply the limited force for a reasonable result
         ApplyForce(uForce);
     }

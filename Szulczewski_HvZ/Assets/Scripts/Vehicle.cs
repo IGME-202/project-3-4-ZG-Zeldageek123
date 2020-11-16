@@ -9,11 +9,16 @@ public abstract class Vehicle : MonoBehaviour
     public Vector3 velocity;
     public Vector3 acceleration;
 
+    public Vector3 forward;
+    public Vector3 right;
+
     [Min (0.0001f)]
     public float mass;
     public float radius;
     public float maxSpeed;
     public float maxForce;
+
+    public float safeDistance = 4f;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -52,6 +57,12 @@ public abstract class Vehicle : MonoBehaviour
 
         //Acceleration must start fresh
         acceleration = Vector3.zero;
+
+        if (direction != Vector3.zero)
+        {
+            forward = direction;
+            right = Vector3.Cross(forward, Vector3.up);
+        }
     }
 
     protected void ApplyForce(Vector3 force)
@@ -142,5 +153,72 @@ public abstract class Vehicle : MonoBehaviour
     public Vector3 Flee (GameObject target)
     {
         return Flee(target.transform.position);
+    }
+
+    
+    public Vector3 Avoidobstacle(GameObject toAvoid)
+    {
+        return AvoidObstacle(toAvoid.transform.position, toAvoid.GetComponent<Obstacle>().radius);
+    }
+
+    
+    public Vector3 AvoidObstacle(Vector3 targetPosition, float obstacleRadius)
+    {
+        //Check if obstacle is behind me
+        Vector3 meToObstacle = targetPosition - position;
+        if(Vector3.Dot(forward, meToObstacle) < 0)
+        {
+            return Vector3.zero;
+        }
+
+        //Check if there's a potential collision (if the obstacle is too far to left or right of vehicle)
+        float rightMeToObstacleDot = Vector3.Dot(right, meToObstacle);
+        if (Mathf.Abs(rightMeToObstacleDot) > obstacleRadius + radius)
+        {
+            return Vector3.zero;
+        }
+
+        //Check if obstacle is in range
+        float distance = meToObstacle.sqrMagnitude - (obstacleRadius * obstacleRadius);
+        if (distance > safeDistance * safeDistance)
+        {
+            return Vector3.zero;
+        }
+
+        //weight the steering force based on how close we are
+        float weight = 0; //Starting value
+
+        //In the case that you phased inside the ostacle
+        if(distance <= 0)
+        {
+            weight = float.MaxValue;
+        }
+        else
+        {
+            weight = (safeDistance * safeDistance) / distance;
+        }
+
+        //clamp weight within acceptable range
+        weight = Mathf.Min(weight, 100000);
+
+        //Give it an initial value
+        Vector3 desiredVelocity = Vector3.zero;
+
+        //if obstacle on left, go right
+        if(rightMeToObstacleDot < 0)
+        {
+            desiredVelocity = right * maxSpeed;
+        }
+        //If on right, steer left
+        else
+        {
+            desiredVelocity = right * -maxSpeed;
+        }
+
+        //Calculate steering force from desired velocity
+        Vector3 steeringForce = (desiredVelocity - velocity) * weight;
+
+        //return steering force
+        return steeringForce;
     }
 }
