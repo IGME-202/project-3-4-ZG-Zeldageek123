@@ -30,4 +30,3 @@ All of my game objects are primitives. No sources for models.
 Notes:
 I AM USING MY GRACE PERIOD (2 DAY EXTENSION) ON THIS PROJECT 
 Something is up with debug lines. I don’t know why you can only toggle the last instantiated zombie’s debug lines in the end game state.
-
