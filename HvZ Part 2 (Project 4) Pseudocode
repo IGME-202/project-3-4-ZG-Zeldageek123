@@ -1,0 +1,161 @@
+1) Method that returns future position for vehicles
+
+public Vector3  GetFuturePosition()
+{
+	futurePos = position + velocity;
+	return futurePos;
+}
+
+2) Method for Pursue
+
+public Vector3 Pursue(GameObject target)
+{
+ 	//Calc future pos of the target
+	Vector3 targetFuturePos = target.GetFuturePosition();
+
+	//Seek this future position, get a force to steer
+	//Seek normalizes the vector then multiplies by maxSpeed
+	return Seek(targetFuturePos);
+}
+
+3) Method for Evade
+
+Public Vector3 Evade(GameObject target)
+{
+	//Calc future position
+	Vector3 targetFuturePos = target.GetFuturePosition();
+
+	//FLEE this future position, get a force to steer
+	//Flee already normalizes the vector then multiplies by maxSpeed
+	return Flee(targetFuturePos);
+}
+
+4) Code for a Zombie to use Pursue()
+
+//Replace the call to ApplyForce(Seek(targetHuman)); in Zombie’s CalcSteeringForces to…
+if(targetHuman.activeSelf == true)
+{
+	ApplyForce(Pursue(targetHuman));
+}
+
+Or, if I were refactoring my code to use uForces, (I didn’t in my build for Project3)
+if(targetHuman.activeSelf == true)
+{
+	uForce += Pursue(targetHuman);
+}
+
+
+5) Code for a Human to use Evade()
+
+//detectionRange is a field already used in my Human class
+//Replace the call uForce += Flee(manager.zombies[i]; to....
+for (int i = 0; i < manager.zombies.Count; i++)
+        {
+            if (Vector3.Distance(position, manager.zombies[i].transform.position) < detectionRange)
+            {
+                //apply the force of evading from the zombie!
+                uForce += Evade(manager.zombies[i]);
+            }
+        }
+
+
+6) Method for Wander
+
+public Vector3 Wander()
+{
+	Vector3 center = position + (transform.forward * 10); // 10 is an arbitrary number, could be replaced by a variable. Represents distance ahead
+	float degree = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+	float circleX = center.x + Mathf.Cos(degree) * 5;	//This is also an arbitrary num that can be replaced with a variable. It represents the radius of the circle that the wanderer is using to find a position to walk towards
+	float circleZ = center.z + Mathf.Sin(degree) * 5;	//also an arbitrary number, must be equal to the last
+
+	Vector3 seekPoint = new Vector3(circleX, 1, circleZ)	//height of 1 to = the human/zombie height
+
+	//return the force from seeking that vector
+	return Seek(seekPoint);
+}
+
+7) Pseudocode for a Zombie to use Wander() when all humans have been caught
+
+//In the zombie’s CalcSteeringForces method
+if (manager.humans.Count == 0)
+{
+	//If all humans gone, just wander
+	ApplyForce(Wander());
+}
+
+//Or, if I refactored my Zombie code to utilize uForces…
+if (manager.humans.Count == 0)
+{
+	//If all humans gone, just wander
+	uForce += Wander();
+}
+
+//Also would have to remove the code making a zombie stop when its targetHuman is inactive (which only happens when all humans are gone)
+
+8) Pseudocode for a Human to use Wander() when not threatened
+//There should be a bool variable called safe.
+//This is representative of whether or not any Zombies are within this Human’s detection range. If there are, safe should be false. If there aren’t, safe should be true.
+
+//In Human’s CalcSteeringForces method 
+//CalcSteeringForces called every frame
+
+bool safe = true;
+for (int i = 0; i < manager.zombies.Count; i++)
+{
+	 if (Vector3.distance (position, manager.zombies[i].transform.position) < detectionRange)
+	{
+		safe = false;
+		//Bail out when unsafe. It only takes one zombie to not wander.
+		break;
+	}
+
+}
+if (safe)
+{
+uForce += Wander();
+}
+
+9) Method for Separation
+
+//There should be a field called personalSpace with the amount of personal space we want for each agent.
+
+public Vector3 Separate(List<GameObject> group)
+{
+Vector3 sum = newVector3();
+float count = 0;
+	foreach(member in group)
+{
+	if(member != this)
+	{
+		if (Vector3.Distance(this.position, member.transform.position) < personalSpace)
+		{
+			Vector3 diff = new Vector3();
+			diff = (position - member.transform.position)
+diff.normalize();
+sum += diff;
+count++;
+		}
+	}
+}
+
+if (count > 0)	//Take the average
+{
+	sum = sum / count;
+}
+
+sum = sum * maxSpeed;	//Scale it
+
+	Vector3 steeringForce = sum - velocity;	//I would also clamp this to maxForce, but idk the syntax
+	return steeringForce;
+}
+
+10) Pseudocode for Zombies and Humans to use Separation()
+
+In CalcSteeringForces for humans…
+uForce += Separate(manager.humans);
+
+In CalcSteeringForces for zombies…
+ApplyForce(Separate(manager.zombies));
+
+But if I refactored Zombie to utilize uForce…
+uForce += Separate(manager.zombies);
